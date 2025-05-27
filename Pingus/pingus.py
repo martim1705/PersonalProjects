@@ -6,13 +6,15 @@ py.init()
 screen = py.display.set_mode((1280, 720))
 clock = py.time.Clock() 
 
-
+font = py.font.SysFont(None, 24)
 
 spawn_rating = 1000 # em milissegundos! 
 
 square = None
 spawn_time = py.time.get_ticks()
 
+
+player_points = 0 
 running = True
 
 # função para desenhar os quadrados 
@@ -26,6 +28,12 @@ while running:
     for event in py.event.get():
         if event.type == py.QUIT:
             running = False
+        elif event.type == py.MOUSEBUTTONDOWN:
+            pos = py.mouse.get_pos()
+            if square and square.collidepoint(pos):
+                player_points += 1
+                square = None
+
     
     
     screen.fill("white")
@@ -42,7 +50,8 @@ while running:
     if square: 
         py.draw.rect(screen, (0,0,0), square)
     
-    
+    score = font.render(f"Score: {player_points}", True, (0,0,0))
+    screen.blit(score, (10,10))
        
     py.display.flip()
     clock.tick(60)
